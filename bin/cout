@@ -1,0 +1,4 @@
+#!/bin/sh
+rm -rf $PROJECT_HOME\cscope.files $PROJECT_HOME\cscope.files
+find $PROJECT_HOME -iname '*.c' -o -iname '*.cpp' -o -iname '*.cc' -o -iname '*.h' -o -iname '*.hpp' -o -iname '*.s' -o -iname '*.S' > $PROJECT_HOME\cscope.files
+cscope -b -i $PROJECT_HOME\cscope.files -f $PROJECT_HOME\cscope.out
