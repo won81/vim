@@ -19,12 +19,11 @@ Plugin 'vim-airline/vim-airline'
 Plugin 'scrooloose/nerdtree'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'Tagbar'
-Plugin 'nanotech/jellybeans.vim'
 " All of your Plugins must be added before the following line
 call vundle#end()            " required
 filetype plugin indent on    " required
 
-colorscheme jellybeans
+colo elflord
 
 " Use 256 colours (Use this setting only if your terminal supports 256 colours)
 set t_Co=256
@@ -46,12 +45,15 @@ endif
 
 nnoremap <F2> :NERDTreeToggle<CR>
 nnoremap <F4> :TagbarToggle<CR>
-nnoremap <F5> :!ctags -R $PROJECT_HOME<CR>:!cout<CR>:cs kill -1<CR>:cs add cscope.out<CR>
+nnoremap <F5> :!rm -f $CTAGS_DB<CR>:!ctags -R $PROJECT_HOME<CR>:!cout<CR>:cs kill -1<CR>:cs add $CSCOPE_DB<CR>
 nnoremap <F9> :nohlsearch<CR>
 
 nnoremap <C-N><C-N> :set number!<CR>
 
-set tags=$PROJECT_HOME/tags
+if !empty(glob($CTAGS_DB))
+    set tags=$CTAGS_DB
+endif
+
 if has('cscope')
     " use both cscope and ctag for 'ctrl-]', ':ta', and 'vim -t'
     set cscopetag
@@ -59,8 +61,8 @@ if has('cscope')
     " if you want the reverse search order.
     set csto=0
     
-    if filereadable('./cscope.out')
-        cs add cscope.out
+    if filereadable($CSCOPE_DB)
+        cs add $SCSOPE_DB
     endif
     
     set cscopeverbose
@@ -104,7 +106,8 @@ let g:NERDTreeDirArrowCollapsible = '▾'
 
 let g:tagbar_show_linenumbers = 0
 
-let g:jellybeans_overrides = {
-\    'MatchParen': { 'guifg': 'dd0093', 'guibg': '000000',
-\                    'ctermfg': 'Magenta', 'ctermbg': '' },
-\}
+if exists('&signcolumn')  " Vim 7.4.2201
+    set signcolumn=yes
+else
+    let g:gitgutter_sign_column_always = 1
+endif
